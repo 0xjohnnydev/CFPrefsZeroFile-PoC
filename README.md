@@ -7,6 +7,34 @@ The caller does not control the file contents. This is not arbitrary file
 write, file read, directory listing, truncation, or replacement of an existing
 file.
 
+## Path scope
+
+The app controls the raced container tree below its own temporary directory:
+
+```text
+/private/var/mobile/Containers/Data/Application/<app-UUID>/tmp/CFPrefsContainer-<nonce>/
+```
+
+The final preference leaf is:
+
+```text
+Library/Preferences/local.research.cfprefs.zero.<nonce>.plist
+```
+
+That leaf is a symlink to one selected missing target. The safe runtime test
+used:
+
+```text
+/private/var/mobile/Containers/Data/Application/<app-UUID>/tmp/CFPrefsTarget-<nonce>/locked/created.plist
+```
+
+The target must not already exist. System `cfprefsd` must also have permission
+to reach its parent directory. A hit creates only a root-owned, mode-`0644`,
+zero-byte regular file.
+
+This primitive cannot overwrite the existing MobileGestalt cache plist. It
+does not provide chosen plist contents.
+
 ## 1. Raw path acceptance
 
 The request uses a container string with the expected system-group prefix. Its
