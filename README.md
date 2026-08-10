@@ -58,8 +58,10 @@ while (atomic_load(&running)) {
 ```
 
 If canonicalization fails at the right point, the daemon keeps the raw path.
-A later authorization check accepts its textual
-`/private/var/containers/Shared/SystemGroup/` prefix.
+Exact-build decompilation indicates that a later authorization check accepts
+its textual `/private/var/containers/Shared/SystemGroup/` prefix. The preserved
+assessment disassembly does not include that exact string comparison, so the
+published mechanism relies on the decompilation plus the runtime path effect.
 
 ## 2. Create before validation
 
@@ -122,6 +124,15 @@ The race can miss. A return value of `2` means no hit or incomplete evidence.
 Two of three app-owned trials hit with a 35-microsecond delay on `iPhone18,2`,
 build `24A5390f`.
 
+A separate two-app test on the same device and build proved cross-container
+creation. The attacker app could not create or inspect the foreign target. The
+owner app independently found a root-owned, mode-`0644`, zero-byte file at the
+chosen missing path and then removed it. Foreign-target confirmation therefore
+requires an independent reader with authority to that container.
+
 Exact-build static analysis found both behaviors in `iPhone18,2` build
 `24A5408d`. Runtime testing has not confirmed the primitive on that build.
 Relevant `24A5408d` function addresses are listed at the top of `poc.m`.
+
+The tests establish only the named iOS 27.0 beta build. The earliest affected
+version is unknown.
