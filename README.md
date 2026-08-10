@@ -54,7 +54,7 @@ The demonstrated targets were an app-owned temporary directory and a path in a
 second app container.
 
 A successful race makes the system `cfprefsd` process create one selected
-missing file with UID 0:
+missing file:
 
 ```text
 owner: root
@@ -64,13 +64,6 @@ size: 0 bytes
 
 The bug creates an empty file. It does not replace or truncate an existing
 file. It also does not control the new file's contents.
-
-## No root access
-
-The caller does not become root. The caller does not receive a root process,
-shell, code execution, or general filesystem access. Only `cfprefsd` performs
-the single file-creation operation with its own authority. The operation does
-not grant the caller continued access to the target path.
 
 ## Patch status
 
