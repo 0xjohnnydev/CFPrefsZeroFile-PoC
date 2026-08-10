@@ -9,6 +9,9 @@ The daemon validates a canonical container path but later uses the caller's raw
 path. A rename race changes which directory that path resolves to. A final
 symlink then redirects the daemon's file creation.
 
+This is a missing-file creation bug, not an existing-file zero-out bug. The
+selected target must not exist before the request.
+
 ## Trigger
 
 The raw path passes a system-group prefix check. Its canonical path points into
@@ -50,7 +53,8 @@ The caller controls the raw traversal path and the final missing file path.
 The demonstrated targets were an app-owned temporary directory and a path in a
 second app container.
 
-A successful race creates one selected missing file as root:
+A successful race makes the system `cfprefsd` process create one selected
+missing file with UID 0:
 
 ```text
 owner: root
@@ -58,8 +62,15 @@ mode: 0644
 size: 0 bytes
 ```
 
-The bug creates an empty file. It does not replace an existing file or control
-file contents.
+The bug creates an empty file. It does not replace or truncate an existing
+file. It also does not control the new file's contents.
+
+## No root access
+
+The caller does not become root. The caller does not receive a root process,
+shell, code execution, or general filesystem access. Only `cfprefsd` performs
+the single file-creation operation with its own authority. The operation does
+not grant the caller continued access to the target path.
 
 ## Patch status
 
