@@ -71,6 +71,10 @@ Static analysis shows the vulnerable logic is still present in iOS 27 beta 5
 (`24A5408d`). Runtime testing on that build is not complete. The iOS 26.6.1
 status is not verified.
 
+Runtime testing confirmed the race on an iPhone 11 running iOS 26.5.2
+(`23F84`). Attempt 2 created a root-owned regular file with mode `0644`
+and size zero, then the PoC removed it.
+
 ## Use
 
 1. Add [`poc.m`](poc.m) to an Objective-C iOS application target.
