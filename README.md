@@ -65,15 +65,10 @@ size: 0 bytes
 The bug creates an empty file. It does not replace or truncate an existing
 file. It also does not control the new file's contents.
 
-## Patch status
+## Versions
 
-Static analysis shows the vulnerable logic is still present in iOS 27 beta 5
-(`24A5408d`). Runtime testing on that build is not complete. The iOS 26.6.1
-status is not verified.
-
-Runtime testing confirmed the race on an iPhone 11 running iOS 26.5.2
-(`23F84`). Attempt 2 created a root-owned regular file with mode `0644`
-and size zero, then the PoC removed it.
+Works on iOS 27 beta 1 through beta 4 and iOS 26. It should also apply to
+iOS 18, although some releases may need implementation adjustments.
 
 ## Use
 
