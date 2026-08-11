@@ -1,7 +1,7 @@
 /*
  * Minimal cfprefsd AnyUser final-symlink create PoC.
  *
- * Exact iPhone18,2 / 24A5408d static locations:
+ * Relevant static locations:
  *   __CFPrefsCopyFixedUpContainerForMessage             0x18066af00
  *   -[CFPrefsDaemon handleSourceMessage:...]            0x180669bf4
  *   -[CFPDSource acceptMessage:populatingReply:]        0x180667554
